@@ -326,8 +326,7 @@ int Dos2UnixMain( int argc, char *argv[] )
  * Determine le type du fichier.
  * Si on ne trouve que des sequences 0x0D 0x0A c'est un fichier Windows.
  * Si on ne trouve que des sequences 0x0A c'est un fichier Unix.
- * file_in  : fichier a traiter
- * file_out : fichier de sortie
+ * fileIn  : fichier a traiter
  * retourne le type du fichier trouve
 \*--------------------------------------------------------------------------*/
 static t_TypeFile DetermineTypeFile( FILE *fileIn )
@@ -362,8 +361,8 @@ static t_TypeFile DetermineTypeFile( FILE *fileIn )
 
 /*--------------------------------------------------------------------------*\
  * Transforme les 0x0D 0x0A des fichiers windows en 0x0A des fichiers Unix
- * file_in  : fichier a traiter
- * file_out : fichier de sortie
+ * fileIn  : fichier a traiter
+ * fileOut : fichier de sortie
  * retourne le nombre de cr/lf trouves dans le fichier
 \*--------------------------------------------------------------------------*/
 static int DosToUnix( FILE *fileIn, FILE *fileOut  )
@@ -396,8 +395,8 @@ static int DosToUnix( FILE *fileIn, FILE *fileOut  )
 
 /*--------------------------------------------------------------------------*\
  * Transforme les 0x0A des fichiers Unix en 0x0D 0x0A des fichiers windows.
- * file_in  : fichier a traiter
- * file_out : fichier de sortie
+ * fileIn  : fichier a traiter
+ * fileOut : fichier de sortie
  * retourne le nombre de lf trouves dans le fichier
 \*--------------------------------------------------------------------------*/
 static int UnixToDos( FILE *fileIn, FILE *fileOut  )
@@ -439,7 +438,7 @@ static int UnixToDos( FILE *fileIn, FILE *fileOut  )
 
 /*--------------------------------------------------------------------------*\
  * Compter les CR/LF dans un fichier
- * file_in  : fichier a traiter
+ * fileIn  : fichier a traiter
  * retourne le nombre de cr/lf trouves
 \*--------------------------------------------------------------------------*/
 static int CompterCRLF( FILE *fileIn )
