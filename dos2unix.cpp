@@ -36,7 +36,7 @@
 /*--------------------------------------------------------------------------*/
 
 /* Debug functions */
-#ifndef NDEBUG
+#ifdef NO_DEBUG
 #   include "pmTrace.h"
 #   define  as_printf       pm_trace0
 #else
@@ -95,7 +95,7 @@ int Dos2UnixMain( int argc, char *argv[] )
     }
     for ( i = 1, j = 0 ; i < argc; i++ ) /* argv[0] : nom du programme en cours */
     {                                    /* argc    : compteur des arguments    */
-        if ( strcmpi( argv[i], "?") == 0 ) 
+        if ( strcmp( argv[i], "?") == 0 ) 
         {
             DemandeParametres();
         } 
@@ -118,7 +118,7 @@ int Dos2UnixMain( int argc, char *argv[] )
         else 
         {
            /* Si ce n'est pas une option, c'est un fichier */
-            strcpy( liste_files[j], argv[i] );
+            strcpy_s( liste_files[j], argv[i] );
             j = j + 1;
         }
     }/* fin du for ( argc ) */
@@ -143,12 +143,12 @@ int Dos2UnixMain( int argc, char *argv[] )
           do 
           {
              /* Les fichiers . et .. ne sont pas a traiter */
-             if (    ( strcmpi( file_infos.name, "." )     != 0 )
+             if (    ( strcmp( file_infos.name, "." )     != 0 )
                   && ( strncmp( file_infos.name, "..", 2 ) != 0 ) 
                 )
              {
                 as_printf("  %s\n", file_infos.name );
-                strcpy( liste_fichiers[j++], file_infos.name );
+                strcpy_s( liste_fichiers[j++], file_infos.name );
              }
           } 
           while ( _findnext( handle_file, &file_infos ) == 0 );
@@ -179,6 +179,7 @@ int Dos2UnixMain( int argc, char *argv[] )
     while ( liste_fichiers[i][0] != '\x0' ) /* fin de la liste */
     {
         as_printf("Fichier %s : ", liste_fichiers[i] );
+        errno_t err;
 
         /* Demander confirmation pour traiter ce fichier */
         if ( demande_confirmation )
@@ -192,7 +193,7 @@ int Dos2UnixMain( int argc, char *argv[] )
         }
 
         /* Ouvrir le fichier a traiter */
-        file_in  = fopen( liste_fichiers[i], "rb" );
+        err = fopen_s( &file_in, liste_fichiers[i], "rb" );
         if ( file_in == NULL )
         {
             as_printf("Impossible d'ouvrir le fichier %s\n", liste_fichiers[i] );
@@ -221,16 +222,16 @@ int Dos2UnixMain( int argc, char *argv[] )
             switch ( type_file ) 
             {
                 case E_UNKWON :
-                    as_printf("type UNKWON\n", nb_crlf );
+                    as_printf("%3d type UNKWON\n", nb_crlf );
                     break;
                 case E_DOS :
-                    as_printf("type DOS\n", nb_crlf );
+                    as_printf("%3d type DOS\n", nb_crlf );
                     break;
                 case E_UNIX :
-                    as_printf("type UNIX\n", nb_crlf );
+                    as_printf("%3d type UNIX\n", nb_crlf );
                     break;
                 case E_DOS_UNIX :
-                    as_printf("type DOS et UNIX\n", nb_crlf );
+                    as_printf("%3d type DOS et UNIX\n", nb_crlf );
                     break;
             }
 
@@ -241,7 +242,7 @@ int Dos2UnixMain( int argc, char *argv[] )
         }
 
         /* Ouvrir le fichier temporaire 1 */
-        file_out1 = fopen( "temp1", "wb" );
+        err = fopen_s(&file_out1 , "temp1", "wb" );
         if ( file_out1 == NULL )
         {
             as_printf("Impossible d'ouvrir le fichier temporaire 1 !\n");
