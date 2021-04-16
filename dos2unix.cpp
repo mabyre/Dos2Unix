@@ -208,6 +208,10 @@ int Dos2UnixMain( int argc, char *argv[] )
             {
                 as_printf("%3d CR/LF\n", nb_crlf );
             }
+            else
+            {
+                as_printf("aucun CR/LF\n");
+            }
 
             /* Passer au fichier suivant */
             fclose( file_in );
